@@ -31,7 +31,7 @@ jobs:
           rpmbuild --target x86_64 -bb termius-app.spec
 
       - name: Archive RPM package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: termius-rpm
           path: ~/rpmbuild/RPMS/x86_64/termius-app-*.rpm
