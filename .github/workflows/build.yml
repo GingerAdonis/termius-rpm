@@ -1,0 +1,37 @@
+name: Build Termius RPM
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: fedora:latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          dnf install -y rpmdevtools rpm-build rpm-devel rpmlint bsdtar
+
+      - name: Set up development build tree
+        run: |
+          rpmdev-setuptree
+
+      - name: Download Termius deb
+        run: |
+          spectool -g -R termius-app.spec
+
+      - name: Build the package
+        run: |
+          rpmbuild --target x86_64 -bb termius-app.spec
+
+      - name: Archive RPM package
+        uses: actions/upload-artifact@v3
+        with:
+          name: termius-rpm
+          path: ~/rpmbuild/RPMS/x86_64/termius-app-*.rpm
