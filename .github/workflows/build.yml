@@ -14,9 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install build dependencies
+      - name: Install build tools
         run: |
-          dnf install -y rpmdevtools rpm-build rpm-devel rpmlint bsdtar
+          dnf install -y rpmdevtools rpm-build rpm-devel rpmlint bsdtar dnf-plugins-core
 
       - name: Set up development build tree
         run: |
@@ -25,6 +25,10 @@ jobs:
       - name: Download Termius deb
         run: |
           spectool -g -R termius-app.spec
+
+      - name: Install build dependencies
+        run: |
+          dnf builddep -y termius-app.spec
 
       - name: Build the package
         run: |
